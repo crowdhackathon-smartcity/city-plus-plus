@@ -1,26 +1,18 @@
 package dgounaris.dev.sch.People;
 
-import android.graphics.Bitmap;
-
-import java.io.Serializable;
-
-import dgounaris.dev.sch.Utils.SerializableImage;
-
 /**
  * Created by DimitrisLPC on 13/5/2017.
  */
 
-public class Person implements Serializable {
+public class Person {
 
     String name;
     String surname;
-    SerializableImage mImage = new SerializableImage();
     int points;
 
-    public Person(String name, String surname, Bitmap profileImg) {
+    public Person(String name, String surname) {
         this.name = name;
         this.surname = surname;
-        mImage.setImage(profileImg);
     }
 
     public boolean addPoints(int extrapoints) {
@@ -28,8 +20,7 @@ public class Person implements Serializable {
         return true;
     }
 
-    public boolean redeemPoints(int pointsRequired) {
-        points -= pointsRequired;
+    public boolean redeemPoints() {
         return true;
     }
 

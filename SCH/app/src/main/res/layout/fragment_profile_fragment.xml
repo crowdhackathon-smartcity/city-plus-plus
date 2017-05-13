@@ -15,32 +15,43 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:src="@drawable/recycle2"
-            />
+            android:src="@drawable/recycle2" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:text="@string/name"
             android:textColor="#000000"
-            android:textSize="28dp"
-            android:textStyle="bold"
-            android:text="@string/name" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="@string/balance"
             android:textColor="#000000"
-            android:textSize="28dp"
-            android:textStyle="bold"
-            android:text="@string/balance"/>
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="Achievements"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <ListView
+            android:id="@+id/trophy_list"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-        </ListView>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/grey"></ListView>
 
     </LinearLayout>
 
