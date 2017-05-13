@@ -1,30 +1,24 @@
 package dgounaris.dev.sch.adapter;
 
-import android.graphics.Bitmap;
-
-import java.io.Serializable;
-
-import dgounaris.dev.sch.Utils.SerializableImage;
-
 /**
  * Created by antonis on 13-May-17.
  */
 
-public class Trophy implements Serializable {
+public class Trophy {
     private String title;
 
-    private SerializableImage image = new SerializableImage();
+    private int image_id;
 
-    public Trophy(String t, Bitmap img) {
+    public Trophy(String t, int img_id) {
         title = t;
-        image.setImage(img);
+        image_id = img_id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public Bitmap getImage() {
-        return image.getImage();
+    public int getImageId() {
+        return image_id;
     }
 }

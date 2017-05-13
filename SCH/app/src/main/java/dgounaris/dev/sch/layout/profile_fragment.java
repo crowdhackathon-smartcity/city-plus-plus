@@ -8,9 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -44,15 +41,18 @@ public class profile_fragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_fragment, container, false);
 
-        //SET NAME, BALANCE
-        TextView nameText = (TextView) view.findViewById(R.id.name);
-        nameText.setText(activeperson.getName() + " " + activeperson.getSurname());
-        TextView balance = (TextView) view.findViewById(R.id.balance);
-        balance.setText(activeperson.getPoints() + " points");
+        //getActivity().setContentView(R.layout.word_list);
 
-        ArrayList<Trophy> trophies;
+        ArrayList<Trophy> trophies = new ArrayList<Trophy>();
+
+        trophies.add(new Trophy("bla", R.drawable.recycle2));
+        trophies.add(new Trophy("bla", R.drawable.recycle2));
+        trophies.add(new Trophy("bla", R.drawable.recycle2));
+        trophies.add(new Trophy("bla", R.drawable.recycle2));
+        trophies.add(new Trophy("bla", R.drawable.recycle2));
+        trophies.add(new Trophy("bla", R.drawable.recycle2));
+        trophies.add(new Trophy("bla", R.drawable.recycle2));
         // SET VALUES TO TROPHIES HERE
-        trophies = activeperson.getTrophies();
 
         TrophyAdapter adapter = new TrophyAdapter(getContext(), trophies);
 
