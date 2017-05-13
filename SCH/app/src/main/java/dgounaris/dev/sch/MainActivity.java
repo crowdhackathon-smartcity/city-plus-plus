@@ -8,11 +8,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import dgounaris.dev.sch.DBHelper.MyDBHelper;
+import dgounaris.dev.sch.People.Person;
 import dgounaris.dev.sch.layout.home_fragment;
 import dgounaris.dev.sch.layout.map_fragment;
 import dgounaris.dev.sch.layout.profile_fragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    Person activeperson = null;
+    MyDBHelper databaseHelper;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -31,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
                     mainFragment = map_fragment.newInstance();
                     break;
             }
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("person", activeperson);
+            mainFragment.setArguments(bundle);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.framelayout, mainFragment);
             transaction.commit();
@@ -43,13 +51,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        databaseHelper = new MyDBHelper(getApplicationContext());
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         // default fragment
+        Fragment default_fragment = new home_fragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("person", activeperson);
+        default_fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.framelayout, new home_fragment());
+        transaction.replace(R.id.framelayout, default_fragment);
         transaction.commit();
+
+        activeperson = databaseHelper.getPerson(1);
     }
 
 }
