@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import dgounaris.dev.sch.People.Person;
+import dgounaris.dev.sch.People.Service;
 import dgounaris.dev.sch.adapter.Trophy;
 
 /**
@@ -150,6 +151,24 @@ public class MyDBHelper extends SQLiteOpenHelper {
         cursor.close();
         this.close();
         return true;
+    }
+
+    public ArrayList<Service> getServices() {
+        ArrayList<Service> services = new ArrayList<>();
+        String myQuery = "select s." + MyDBContract.Services.COLUMN_NAME_NAME + ", s." + MyDBContract.Services.COLUMN_NAME_POINTS + ", s." + MyDBContract.Services.COLUMN_NAME_EMPTY_SLOTS +
+                " from " + MyDBContract.Services.TABLE_NAME;
+        this.openDatabase();
+        Cursor cursor = this.myDatabase.rawQuery(myQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                services.add(new Service(
+                        cursor.getString(cursor.getColumnIndex(MyDBContract.Services.COLUMN_NAME_NAME)),
+                        cursor.getInt(cursor.getColumnIndex(MyDBContract.Services.COLUMN_NAME_EMPTY_SLOTS)),
+                        cursor.getInt(cursor.getColumnIndex(MyDBContract.Services.COLUMN_NAME_POINTS))
+                ));
+            } while (cursor.moveToNext());
+        }
+        return services;
     }
 
 }
