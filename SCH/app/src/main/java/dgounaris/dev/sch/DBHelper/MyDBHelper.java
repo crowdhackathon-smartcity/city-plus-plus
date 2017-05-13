@@ -37,16 +37,15 @@ public class MyDBHelper extends SQLiteOpenHelper {
         boolean dbexist = checkDatabase();
         if (dbexist) {
             openDatabase();
-        }
-        else {
+        } else {
             createDatabase();
         }
     }
 
     private void createDatabase() {
         boolean dbexist = checkDatabase();
-        if (dbexist) {}
-        else {
+        if (dbexist) {
+        } else {
             this.getReadableDatabase();
             try {
                 copyDatabase();
@@ -75,7 +74,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
 
         byte[] buffer = new byte[1024];
         int length;
-        while ((length = myinput.read(buffer))>0) {
+        while ((length = myinput.read(buffer)) > 0) {
             myoutput.write(buffer, 0, length);
         }
 
@@ -89,8 +88,8 @@ public class MyDBHelper extends SQLiteOpenHelper {
         myDatabase = SQLiteDatabase.openDatabase(mypath, null, SQLiteDatabase.OPEN_READWRITE);
     }
 
-    public synchronized void close(){
-        if(myDatabase != null){
+    public synchronized void close() {
+        if (myDatabase != null) {
             myDatabase.close();
         }
         super.close();

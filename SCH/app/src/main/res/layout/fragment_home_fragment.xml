@@ -15,12 +15,11 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
             android:background="@drawable/circle"
-            android:src="@drawable/rsz_1recycle"
-            android:padding="10dp"
             android:gravity="center"
-            android:text="pair"
-            android:textSize="50sp" />
+            android:padding="40dp"
+            android:src="@drawable/rsz_1recycle" />
     </RelativeLayout>
 
 </FrameLayout>
