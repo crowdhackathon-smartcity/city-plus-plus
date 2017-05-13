@@ -1,9 +1,14 @@
 package dgounaris.dev.sch.layout;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +18,9 @@ import android.widget.Toast;
 
 import dgounaris.dev.sch.People.Person;
 import dgounaris.dev.sch.R;
+
+import static android.R.attr.id;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 public class home_fragment extends Fragment {
 
@@ -53,14 +61,25 @@ public class home_fragment extends Fragment {
                 myDialog.setContentView(text);
                 myDialog.show();
 
-                final Handler handler2 = new Handler();
-                handler2.postDelayed(new Runnable() {
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         myDialog.dismiss();
                         Toast.makeText(getContext(), "Succesfully Connected", Toast.LENGTH_SHORT).show();
-                        //FragmentManager fragmentManager = getFragmentManager();
-                        //fragmentManager.beginTransaction().replace(R.id.profile_f, profile_fragment.newInstance()).commit();
+
+
+
+                        BottomNavigationView nv = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
+                        nv.getMenu().getItem(0).setChecked(true);
+                        
+                        Fragment fragment = profile_fragment.newInstance();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("activeperson", activeperson);
+                        fragment.setArguments(bundle);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.framelayout, fragment);
+                        transaction.commit();
 
                     }
                 }, 3000);
