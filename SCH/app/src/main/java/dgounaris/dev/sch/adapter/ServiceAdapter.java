@@ -30,7 +30,6 @@ public class ServiceAdapter extends ArrayAdapter<Service> {
     @Override
     public View getView(int position, View convertView, final ViewGroup parent) {
         View listItemView = convertView;
-        ViewHolder vh = new ViewHolder();
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.service_list_item, parent, false);
@@ -58,13 +57,6 @@ public class ServiceAdapter extends ArrayAdapter<Service> {
     public ServiceAdapter(Context context, ArrayList<Service> arrayList, Fragment parent) {
         super(context, 0, arrayList);
         parentFragment = parent;
-    }
-
-    public static class ViewHolder {
-        TextView mainname;
-        TextView slotstext;
-        TextView pointstext;
-        Button activateButton;
     }
 
 }
