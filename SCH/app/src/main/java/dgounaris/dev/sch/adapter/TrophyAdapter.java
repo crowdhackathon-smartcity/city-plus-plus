@@ -30,8 +30,8 @@ public class TrophyAdapter extends ArrayAdapter<Trophy> {
         Trophy current_word = getItem(position);
 
         ImageView image = (ImageView) listItemView.findViewById(R.id.image);
-        if (current_word.getImageId() != 0)
-            image.setImageResource(current_word.getImageId());
+        if (current_word.getImage()!=null)
+            image.setImageBitmap(current_word.getImage());
         else
             image.setVisibility(View.GONE);
 
