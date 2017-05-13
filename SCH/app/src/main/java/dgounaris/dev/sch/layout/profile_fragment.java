@@ -1,7 +1,6 @@
 package dgounaris.dev.sch.layout;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,14 +11,14 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import dgounaris.dev.sch.MainActivity;
+import dgounaris.dev.sch.People.Person;
 import dgounaris.dev.sch.R;
 import dgounaris.dev.sch.adapter.Trophy;
 import dgounaris.dev.sch.adapter.TrophyAdapter;
 
-import static android.support.v7.widget.AppCompatDrawableManager.get;
-
 public class profile_fragment extends Fragment {
+
+    private Person activeperson;
 
     public profile_fragment() {
         // Required empty public constructor
@@ -33,13 +32,7 @@ public class profile_fragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-
-
-
-
+        activeperson = (Person) getArguments().getSerializable("activeperson");
     }
 
     @Override
