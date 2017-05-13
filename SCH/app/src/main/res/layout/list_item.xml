@@ -9,7 +9,7 @@
         android:layout_width="88dp"
         android:layout_height="88dp"
         android:background="#FFF7DA"
-        android:src="@drawable/ic_stars_black_24dp" />
+        android:src="@drawable/recycle2" />
 
 
     <TextView
