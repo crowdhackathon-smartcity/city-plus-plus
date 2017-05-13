@@ -8,8 +8,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.GoogleMap;
+
+import java.util.ArrayList;
+
 import dgounaris.dev.sch.DBHelper.MyDBHelper;
 import dgounaris.dev.sch.People.Person;
+import dgounaris.dev.sch.People.Service;
 import dgounaris.dev.sch.layout.home_fragment;
 import dgounaris.dev.sch.layout.map_fragment;
 import dgounaris.dev.sch.layout.profile_fragment;
@@ -26,18 +31,18 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment mainFragment = null;
             switch (item.getItemId()) {
-                case R.id.navigation_home:
+                case R.id.navigation_connect:
                     mainFragment = home_fragment.newInstance();
                     break;
-                case R.id.navigation_dashboard:
+                case R.id.navigation_profile:
                     mainFragment = profile_fragment.newInstance();
                     break;
-                case R.id.navigation_notifications:
+                case R.id.navigation_map:
                     mainFragment = map_fragment.newInstance();
                     break;
             }
             Bundle bundle = new Bundle();
-            bundle.putSerializable("person", activeperson);
+            bundle.putSerializable("activeperson", activeperson);
             mainFragment.setArguments(bundle);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.framelayout, mainFragment);
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         databaseHelper = new MyDBHelper(getApplicationContext());
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setSelectedItemId(R.id.navigation_connect);
         // default fragment
         Fragment default_fragment = new home_fragment();
         Bundle bundle = new Bundle();
@@ -64,12 +70,11 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
 
         activeperson = databaseHelper.getPerson(1);
+        databaseHelper.setPersonTrophies(activeperson);
     }
 
-    public int connectPersonBin() {
-        int myid = -1;
-
-        return myid;
+    public ArrayList<Service> getAvailableServices() {
+        return databaseHelper.getServices();
     }
 
 }
