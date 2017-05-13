@@ -3,8 +3,8 @@
     android:shape="oval">
 
     <size
-        android:width="230dp"
-        android:height="230dp" />
+        android:width="10dp"
+        android:height="10dp" />
     <gradient
         android:angle="270"
         android:endColor="#C6FF00"

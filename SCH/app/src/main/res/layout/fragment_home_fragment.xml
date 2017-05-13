@@ -17,7 +17,9 @@
             android:layout_centerVertical="true"
             android:background="@drawable/circle"
             android:src="@drawable/rsz_1recycle"
-            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:padding="25dp"
+            android:adjustViewBounds="true"
             android:gravity="center"
             android:text="pair"
             android:textSize="50sp" />
