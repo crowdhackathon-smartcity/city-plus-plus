@@ -16,6 +16,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -61,6 +62,8 @@ public class map_fragment extends Fragment implements OnMapReadyCallback {
         map.addMarker(new MarkerOptions().position(athens).title("example"));
         CameraPosition cameraPosition = new CameraPosition.Builder().target(athens).zoom(12).build();
         map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        map.getUiSettings();
+
     }
 
     @Override

@@ -10,8 +10,11 @@ import android.view.MenuItem;
 
 import com.google.android.gms.maps.GoogleMap;
 
+import java.util.ArrayList;
+
 import dgounaris.dev.sch.DBHelper.MyDBHelper;
 import dgounaris.dev.sch.People.Person;
+import dgounaris.dev.sch.People.Service;
 import dgounaris.dev.sch.layout.home_fragment;
 import dgounaris.dev.sch.layout.map_fragment;
 import dgounaris.dev.sch.layout.profile_fragment;
@@ -68,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
 
         activeperson = databaseHelper.getPerson(1);
         databaseHelper.setPersonTrophies(activeperson);
+    }
+
+    public ArrayList<Service> getServices() {
+        return databaseHelper.getServices();
     }
 
 }
