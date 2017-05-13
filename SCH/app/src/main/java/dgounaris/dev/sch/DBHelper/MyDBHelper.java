@@ -24,7 +24,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
 
     private Context mContext;
 
-    private static final String DATABASE_NAME = "UsersDB.db";
+    private static final String DATABASE_NAME = "schdb.db";
     private static String DATABASE_PATH = "";
     private static final int DATABASE_VERSION = 1;
 
@@ -110,6 +110,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
 
         Person mPerson = null;
         String myQuery = "select * from " + MyDBContract.People.TABLE_NAME + " p where p." + MyDBContract.People.COLUMN_NAME_ID + " = " + id;
+        this.openDatabase();
         Cursor cursor = this.myDatabase.rawQuery(myQuery, null);
         if (cursor.moveToFirst()) {
             byte[] myImgByte = cursor.getBlob(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_IMAGE)); //image

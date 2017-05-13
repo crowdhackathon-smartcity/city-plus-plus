@@ -14,7 +14,7 @@ public class Person implements Serializable {
 
     String name;
     String surname;
-    SerializableImage mImage;
+    SerializableImage mImage = new SerializableImage();
     int points;
 
     public Person(String name, String surname, Bitmap profileImg) {
