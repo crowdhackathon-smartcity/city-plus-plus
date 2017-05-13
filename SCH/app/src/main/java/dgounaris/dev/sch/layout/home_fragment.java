@@ -8,9 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import dgounaris.dev.sch.People.Person;
 import dgounaris.dev.sch.R;
 
 public class home_fragment extends Fragment {
+
+    private Person activeperson;
 
     public home_fragment() {
         // Required empty public constructor
@@ -24,6 +27,7 @@ public class home_fragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activeperson = (Person) getArguments().getSerializable("activeperson");
     }
 
     @Override
@@ -31,6 +35,10 @@ public class home_fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home_fragment, container, false);
+    }
+
+    private void onBinConnection() {
+
     }
 
 }

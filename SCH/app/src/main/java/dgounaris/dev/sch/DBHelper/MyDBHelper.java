@@ -116,6 +116,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
             byte[] myImgByte = cursor.getBlob(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_IMAGE)); //image
             if (myImgByte != null) {
                 mPerson = new Person(
+                        cursor.getInt(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_ID)), //id
                         cursor.getString(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_NAME)), //name
                         cursor.getString(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_NAME)), //surname
                         BitmapFactory.decodeByteArray(myImgByte, 0, myImgByte.length)
