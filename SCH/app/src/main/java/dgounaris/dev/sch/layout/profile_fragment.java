@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -89,11 +90,21 @@ public class profile_fragment extends Fragment {
             Dialog myDialog = new Dialog(getActivity());
             myDialog.setContentView(R.layout.redeem_view);
             ListView serviceList = (ListView) myDialog.findViewById(R.id.service_list);
-            serviceList.setAdapter(new ServiceAdapter(getContext(), services));
+            serviceList.setAdapter(new ServiceAdapter(getContext(), services, this));
             myDialog.setCancelable(true);
             myDialog.setTitle("ListView");
             myDialog.show();
         }
+    }
+
+    public void onRedeemPoints(int serviceid, int points) {
+        if (((MainActivity)getActivity()).onRedeemPoints(serviceid, points)) {
+            Toast.makeText(getContext(), "Transaction successful", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getContext(), "Error processing request, please try again later.", Toast.LENGTH_SHORT).show();
+        }
+        ((MainActivity)getActivity()).reloadFragment(this);
     }
 
 }

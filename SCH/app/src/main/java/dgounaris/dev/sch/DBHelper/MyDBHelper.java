@@ -1,5 +1,6 @@
 package dgounaris.dev.sch.DBHelper;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -155,20 +156,48 @@ public class MyDBHelper extends SQLiteOpenHelper {
 
     public ArrayList<Service> getServices() {
         ArrayList<Service> services = new ArrayList<>();
-        String myQuery = "select s." + MyDBContract.Services.COLUMN_NAME_NAME + ", s." + MyDBContract.Services.COLUMN_NAME_POINTS + ", s." + MyDBContract.Services.COLUMN_NAME_EMPTY_SLOTS +
+        String myQuery = "select s." + MyDBContract.Services.COLUMN_NAME_ID + ", s." + MyDBContract.Services.COLUMN_NAME_NAME + ", s." + MyDBContract.Services.COLUMN_NAME_POINTS + ", s." + MyDBContract.Services.COLUMN_NAME_EMPTY_SLOTS +
                 " from " + MyDBContract.Services.TABLE_NAME + " s where " + MyDBContract.Services.COLUMN_NAME_EMPTY_SLOTS + " > 0";
         this.openDatabase();
         Cursor cursor = this.myDatabase.rawQuery(myQuery, null);
         if (cursor.moveToFirst()) {
             do {
                 services.add(new Service(
+                        cursor.getInt(cursor.getColumnIndex(MyDBContract.Services.COLUMN_NAME_ID)),
                         cursor.getString(cursor.getColumnIndex(MyDBContract.Services.COLUMN_NAME_NAME)),
                         cursor.getInt(cursor.getColumnIndex(MyDBContract.Services.COLUMN_NAME_EMPTY_SLOTS)),
                         cursor.getInt(cursor.getColumnIndex(MyDBContract.Services.COLUMN_NAME_POINTS))
                 ));
             } while (cursor.moveToNext());
         }
+        cursor.close();
+        this.close();
         return services;
+    }
+
+    public boolean redeemService(int serviceId, int pointsNeeded, int personId) {
+        this.openDatabase();
+        String myQuery = "select " + MyDBContract.People.COLUMN_NAME_POINTS + " from " + MyDBContract.People.TABLE_NAME + " where " + MyDBContract.People.COLUMN_NAME_ID + " = " + personId;
+        Cursor cursor = this.myDatabase.rawQuery(myQuery, null);
+        int currPoints=0;
+        if (cursor.moveToFirst()) {
+            currPoints = cursor.getInt(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_POINTS));
+        }
+        if (currPoints<pointsNeeded) {
+            return false;
+        }
+        myQuery = "update " + MyDBContract.People.TABLE_NAME + " set " + MyDBContract.People.COLUMN_NAME_POINTS + " = " + currPoints + " - " + pointsNeeded +
+                " where " + MyDBContract.Services.COLUMN_NAME_ID + " = " + serviceId;
+        cursor = this.myDatabase.rawQuery(myQuery,null);
+        cursor.moveToFirst();
+        cursor.close();
+        myQuery = "update " + MyDBContract.Services.TABLE_NAME + " set " + MyDBContract.Services.COLUMN_NAME_EMPTY_SLOTS + " = " + MyDBContract.Services.COLUMN_NAME_EMPTY_SLOTS + " - " + 1 +
+                " where " + MyDBContract.Services.COLUMN_NAME_ID + " = " + serviceId;
+        cursor = this.myDatabase.rawQuery(myQuery, null);
+        cursor.moveToFirst();
+        cursor.close();
+        this.close();
+        return true;
     }
 
 }

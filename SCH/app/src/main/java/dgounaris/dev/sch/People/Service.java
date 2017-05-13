@@ -6,11 +6,13 @@ package dgounaris.dev.sch.People;
 
 public class Service {
 
+    private int id;
     private String name;
     private int slots;
     private int points_needed;
 
-    public Service(String name, int slots, int points_needed) {
+    public Service(int id, String name, int slots, int points_needed) {
+        this.id = id;
         this.name = name;
         this.slots = slots;
         this.points_needed = points_needed;
@@ -38,5 +40,9 @@ public class Service {
 
     public int getPoints_needed() {
         return points_needed;
+    }
+
+    public int getId() {
+        return id;
     }
 }
