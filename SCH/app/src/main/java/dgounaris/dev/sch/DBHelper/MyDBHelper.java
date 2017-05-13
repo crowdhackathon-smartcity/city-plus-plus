@@ -13,8 +13,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import dgounaris.dev.sch.People.Person;
+import dgounaris.dev.sch.adapter.Trophy;
 
 /**
  * Created by DimitrisLPC on 13/5/2017.
@@ -37,15 +39,16 @@ public class MyDBHelper extends SQLiteOpenHelper {
         boolean dbexist = checkDatabase();
         if (dbexist) {
             openDatabase();
-        } else {
+        }
+        else {
             createDatabase();
         }
     }
 
     private void createDatabase() {
         boolean dbexist = checkDatabase();
-        if (dbexist) {
-        } else {
+        if (dbexist) {}
+        else {
             this.getReadableDatabase();
             try {
                 copyDatabase();
@@ -74,7 +77,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
 
         byte[] buffer = new byte[1024];
         int length;
-        while ((length = myinput.read(buffer)) > 0) {
+        while ((length = myinput.read(buffer))>0) {
             myoutput.write(buffer, 0, length);
         }
 
@@ -88,8 +91,8 @@ public class MyDBHelper extends SQLiteOpenHelper {
         myDatabase = SQLiteDatabase.openDatabase(mypath, null, SQLiteDatabase.OPEN_READWRITE);
     }
 
-    public synchronized void close() {
-        if (myDatabase != null) {
+    public synchronized void close(){
+        if(myDatabase != null){
             myDatabase.close();
         }
         super.close();
@@ -117,7 +120,8 @@ public class MyDBHelper extends SQLiteOpenHelper {
                 mPerson = new Person(
                         cursor.getInt(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_ID)), //id
                         cursor.getString(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_NAME)), //name
-                        cursor.getString(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_NAME)), //surname
+                        cursor.getString(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_SURNAME)), //surname
+                        cursor.getInt(cursor. getColumnIndex(MyDBContract.People.COLUMN_NAME_POINTS)), //points
                         BitmapFactory.decodeByteArray(myImgByte, 0, myImgByte.length)
                 );
             }
@@ -125,6 +129,27 @@ public class MyDBHelper extends SQLiteOpenHelper {
         cursor.close();
         this.close();
         return mPerson;
+    }
+
+    public boolean setPersonTrophies(Person myperson) {
+        ArrayList<Trophy> myTrophies = new ArrayList<>();
+        String myQuery = "select t." + MyDBContract.Trophies.COLUMN_NAME_NAME + ", t." + MyDBContract.Trophies.COLUMN_NAME_IMAGE +
+                " from " + MyDBContract.People_Trophies.TABLE_NAME + " pt, " + MyDBContract.Trophies.TABLE_NAME + " t " +
+                "where pt." + MyDBContract.People_Trophies.COLUMN_NAME_PERSON_ID + " = " + myperson.getId() + " and pt." + MyDBContract.People_Trophies.COLUMN_NAME_TROPHY_ID + " = t." + MyDBContract.Trophies.COLUMN_NAME_ID;
+        this.openDatabase();
+        Cursor cursor = this.myDatabase.rawQuery(myQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                byte[] myImgByte = cursor.getBlob(cursor.getColumnIndex(MyDBContract.Trophies.COLUMN_NAME_IMAGE)); //image
+                myperson.addTrophy(new Trophy(
+                        cursor.getString(cursor.getColumnIndex(MyDBContract.Trophies.COLUMN_NAME_NAME)),
+                        BitmapFactory.decodeByteArray(myImgByte, 0, myImgByte.length)
+                ));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        this.close();
+        return true;
     }
 
 }
