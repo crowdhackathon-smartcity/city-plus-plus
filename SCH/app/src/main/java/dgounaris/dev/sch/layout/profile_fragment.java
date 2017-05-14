@@ -63,20 +63,9 @@ public class profile_fragment extends Fragment {
 
                         TextView balance = (TextView) getActivity().findViewById(R.id.balance);
                         balance.setText(mdb.set_balance(10, activeperson.getId()) + " points");
+                        activeperson.setPoints(activeperson.getPoints()+10);
                         Toast.makeText(getContext(),"10 points added!",Toast.LENGTH_SHORT).show();
                     }
-            }, 3000);
-
-            final Handler handler1 = new Handler();
-            handler1.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    MyDBHelper mdb1 = new MyDBHelper(getContext());
-
-                    TextView balance = (TextView) getActivity().findViewById(R.id.balance);
-                    balance.setText(mdb1.set_balance(10, activeperson.getId()) + " points");
-                    Toast.makeText(getContext(),"10 points added!",Toast.LENGTH_SHORT).show();
-                }
             }, 3000);
         }
     }
