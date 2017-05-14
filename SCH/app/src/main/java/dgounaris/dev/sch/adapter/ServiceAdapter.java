@@ -59,4 +59,9 @@ public class ServiceAdapter extends ArrayAdapter<Service> {
         parentFragment = parent;
     }
 
+    public int[] getCurrentServiceDetails(int pos) {
+        int[] array = {getItem(pos).getId(), getItem(pos).getPoints_needed()};
+        return array;
+    }
+
 }

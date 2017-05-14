@@ -2,6 +2,8 @@ package dgounaris.dev.sch.layout;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +22,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+import dgounaris.dev.sch.HOFActivity;
 import dgounaris.dev.sch.MainActivity;
 import dgounaris.dev.sch.People.Person;
 import dgounaris.dev.sch.People.Service;
@@ -53,6 +57,8 @@ public class profile_fragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile_fragment, container, false);
 
         //SET NAME, BALANCE
+        ImageView profileimg = (ImageView) view.findViewById(R.id.profile_img);
+        profileimg.setImageBitmap(activeperson.getmImage().getImage());
         TextView nameText = (TextView) view.findViewById(R.id.name);
         nameText.setText(activeperson.getName() + " " + activeperson.getSurname());
         TextView balance = (TextView) view.findViewById(R.id.balance);
@@ -77,6 +83,15 @@ public class profile_fragment extends Fragment {
             }
         });
 
+        Button hofbutton = (Button) view.findViewById(R.id.hof_button);
+        hofbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mIntent = new Intent(getActivity(), HOFActivity.class);
+                startActivity(mIntent);
+            }
+        });
+
         return view;
     }
 
@@ -89,8 +104,14 @@ public class profile_fragment extends Fragment {
         else {
             Dialog myDialog = new Dialog(getActivity());
             myDialog.setContentView(R.layout.redeem_view);
-            ListView serviceList = (ListView) myDialog.findViewById(R.id.service_list);
+            final ListView serviceList = (ListView) myDialog.findViewById(R.id.service_list);
             serviceList.setAdapter(new ServiceAdapter(getContext(), services, this));
+            serviceList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> list, View v, int pos, long id) {
+                    int[] sDet = ((ServiceAdapter)serviceList.getAdapter()).getCurrentServiceDetails(pos);
+                    onRedeemPoints(sDet[0], sDet[1]);
+                }
+            });
             myDialog.setCancelable(true);
             myDialog.setTitle("ListView");
             myDialog.show();
@@ -98,13 +119,16 @@ public class profile_fragment extends Fragment {
     }
 
     public void onRedeemPoints(int serviceid, int points) {
-        if (((MainActivity)getActivity()).onRedeemPoints(serviceid, points)) {
+        int result = ((MainActivity)getActivity()).onRedeemPoints(serviceid, points);
+        if (result>=0) {
             Toast.makeText(getContext(), "Transaction successful", Toast.LENGTH_SHORT).show();
+            TextView textView = (TextView) getView().findViewById(R.id.balance);
+            textView.setText(result + " points");
+            activeperson.setPoints(result);
         }
         else {
             Toast.makeText(getContext(), "Error processing request, please try again later.", Toast.LENGTH_SHORT).show();
         }
-        ((MainActivity)getActivity()).reloadFragment(this);
     }
 
 }

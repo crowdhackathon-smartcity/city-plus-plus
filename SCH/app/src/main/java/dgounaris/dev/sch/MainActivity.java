@@ -82,16 +82,8 @@ public class MainActivity extends AppCompatActivity {
         return databaseHelper.getServices();
     }
 
-    public boolean onRedeemPoints(int serviceId, int pointsNeeded) {
+    public int onRedeemPoints(int serviceId, int pointsNeeded) {
         return databaseHelper.redeemService(serviceId, pointsNeeded, this.activeperson.getId());
-    }
-
-    public void reloadFragment(Fragment fragment) {
-        Fragment activeFragment = fragment;
-        getPersonInfo();
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.framelayout, activeFragment);
-        ft.commit();
     }
 
 }
