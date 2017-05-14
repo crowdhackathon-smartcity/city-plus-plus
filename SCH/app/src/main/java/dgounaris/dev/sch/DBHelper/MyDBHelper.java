@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -157,7 +158,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
     public ArrayList<Service> getServices() {
         ArrayList<Service> services = new ArrayList<>();
         String myQuery = "select s." + MyDBContract.Services.COLUMN_NAME_ID + ", s." + MyDBContract.Services.COLUMN_NAME_NAME + ", s." + MyDBContract.Services.COLUMN_NAME_POINTS + ", s." + MyDBContract.Services.COLUMN_NAME_EMPTY_SLOTS +
-                " from " + MyDBContract.Services.TABLE_NAME + " s where " + MyDBContract.Services.COLUMN_NAME_EMPTY_SLOTS + " > 0";
+                " from " + MyDBContract.Services.TABLE_NAME + " s where " + MyDBContract.Services.COLUMN_NAME_EMPTY_SLOTS + " > 0 order by " + MyDBContract.Services.COLUMN_NAME_POINTS + " desc";
         this.openDatabase();
         Cursor cursor = this.myDatabase.rawQuery(myQuery, null);
         if (cursor.moveToFirst()) {
@@ -175,7 +176,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
         return services;
     }
 
-    public boolean redeemService(int serviceId, int pointsNeeded, int personId) {
+    public int redeemService(int serviceId, int pointsNeeded, int personId) {
         this.openDatabase();
         String myQuery = "select " + MyDBContract.People.COLUMN_NAME_POINTS + " from " + MyDBContract.People.TABLE_NAME + " where " + MyDBContract.People.COLUMN_NAME_ID + " = " + personId;
         Cursor cursor = this.myDatabase.rawQuery(myQuery, null);
@@ -184,9 +185,10 @@ public class MyDBHelper extends SQLiteOpenHelper {
             currPoints = cursor.getInt(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_POINTS));
         }
         if (currPoints<pointsNeeded) {
-            return false;
+            return -1;
         }
-        myQuery = "update " + MyDBContract.People.TABLE_NAME + " set " + MyDBContract.People.COLUMN_NAME_POINTS + " = " + currPoints + " - " + pointsNeeded +
+        currPoints -= pointsNeeded;
+        myQuery = "update " + MyDBContract.People.TABLE_NAME + " set " + MyDBContract.People.COLUMN_NAME_POINTS + " = " + currPoints +
                 " where " + MyDBContract.Services.COLUMN_NAME_ID + " = " + serviceId;
         cursor = this.myDatabase.rawQuery(myQuery,null);
         cursor.moveToFirst();
@@ -197,8 +199,49 @@ public class MyDBHelper extends SQLiteOpenHelper {
         cursor.moveToFirst();
         cursor.close();
         this.close();
-        return true;
+        return currPoints;
     }
 
+    public int set_balance(int points_given, int person_id) {
+        this.openDatabase();
+        String sql_get_points = "select " + MyDBContract.People.COLUMN_NAME_POINTS + " from " + MyDBContract.People.TABLE_NAME + " where " + person_id + " = " + MyDBContract.People.COLUMN_NAME_ID;
+        Cursor cursor;
+        cursor = this.myDatabase.rawQuery(sql_get_points, null);
+        int data = 0;
+        if(cursor.moveToFirst())
+            data = cursor.getInt(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_POINTS));
+        data += points_given;
+        String sql = "update " + MyDBContract.People.TABLE_NAME + " set " + MyDBContract.People.COLUMN_NAME_POINTS + " = " + data + " where " + person_id + " = " + MyDBContract.People.COLUMN_NAME_ID;
+        cursor = this.myDatabase.rawQuery(sql,null);
+        cursor.moveToFirst();
+        cursor.close();
+        this.close();
+        return data;
+    }
+
+    public ArrayList<Person> top_5(){
+        this.openDatabase();
+        ArrayList<Person> personArrayList = new ArrayList<>();
+        //ArrayAdapter<Person> personArrayAdapter = new ArrayAdapter<Person>();
+        String sql = "select " + MyDBContract.People.COLUMN_NAME_ID + ", " + MyDBContract.People.COLUMN_NAME_NAME + " , " + MyDBContract.People.COLUMN_NAME_SURNAME + " , "
+                + MyDBContract.People.COLUMN_NAME_POINTS + " , " + MyDBContract.People.COLUMN_NAME_IMAGE +
+                " from " + MyDBContract.People.TABLE_NAME + " order by " + MyDBContract.People.COLUMN_NAME_POINTS + " desc " + " limit 3";
+        Cursor cursor = this.myDatabase.rawQuery(sql,null);
+        if (cursor.moveToFirst()) {
+            do {
+                byte[] myImgByte = cursor.getBlob(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_IMAGE)); //image
+                personArrayList.add(new Person(
+                        cursor.getInt(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_ID)),
+                        cursor.getString(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_NAME)),
+                        cursor.getString(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_SURNAME)),
+                        cursor.getInt(cursor.getColumnIndex(MyDBContract.People.COLUMN_NAME_POINTS)),
+                        BitmapFactory.decodeByteArray(myImgByte, 0, myImgByte.length)
+                ));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        this.close();
+        return personArrayList;
+    }
 }
 
