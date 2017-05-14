@@ -12,11 +12,12 @@ import dgounaris.dev.sch.Utils.SerializableImage;
 
 public class Trophy implements Serializable {
     private String title;
-
+    private String description;
     private SerializableImage image = new SerializableImage();
 
-    public Trophy(String t, Bitmap img) {
+    public Trophy(String t, String d, Bitmap img) {
         title = t;
+        description = d;
         image.setImage(img);
     }
 
@@ -26,5 +27,9 @@ public class Trophy implements Serializable {
 
     public Bitmap getImage() {
         return image.getImage();
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

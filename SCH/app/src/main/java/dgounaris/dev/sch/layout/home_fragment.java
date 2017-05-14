@@ -75,6 +75,7 @@ public class home_fragment extends Fragment {
                         
                         Fragment fragment = profile_fragment.newInstance();
                         Bundle bundle = new Bundle();
+                        bundle.putInt("from_home", 1);
                         bundle.putSerializable("activeperson", activeperson);
                         fragment.setArguments(bundle);
                         FragmentTransaction transaction = getFragmentManager().beginTransaction();

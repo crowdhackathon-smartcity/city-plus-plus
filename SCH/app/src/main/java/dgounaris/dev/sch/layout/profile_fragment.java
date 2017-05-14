@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +25,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+import dgounaris.dev.sch.DBHelper.MyDBHelper;
 import dgounaris.dev.sch.HOFActivity;
 import dgounaris.dev.sch.MainActivity;
 import dgounaris.dev.sch.People.Person;
@@ -48,6 +52,33 @@ public class profile_fragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activeperson = (Person) getArguments().getSerializable("activeperson");
+
+        int is_from_home = getArguments().getInt("from_home", 0);
+        if (is_from_home == 1) {
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        MyDBHelper mdb = new MyDBHelper(getContext());
+
+                        TextView balance = (TextView) getActivity().findViewById(R.id.balance);
+                        balance.setText(mdb.set_balance(10, activeperson.getId()) + " points");
+                        Toast.makeText(getContext(),"10 points added!",Toast.LENGTH_SHORT).show();
+                    }
+            }, 3000);
+
+            final Handler handler1 = new Handler();
+            handler1.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    MyDBHelper mdb1 = new MyDBHelper(getContext());
+
+                    TextView balance = (TextView) getActivity().findViewById(R.id.balance);
+                    balance.setText(mdb1.set_balance(10, activeperson.getId()) + " points");
+                    Toast.makeText(getContext(),"10 points added!",Toast.LENGTH_SHORT).show();
+                }
+            }, 3000);
+        }
     }
 
     @Override
@@ -97,18 +128,17 @@ public class profile_fragment extends Fragment {
 
     public void showServices() {
         ArrayList<Service> services;
-        services = ((MainActivity)getActivity()).getAvailableServices();
+        services = ((MainActivity) getActivity()).getAvailableServices();
         if (services.isEmpty()) {
             Toast.makeText(getContext(), "Sorry, no available redeeming options.", Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             Dialog myDialog = new Dialog(getActivity());
             myDialog.setContentView(R.layout.redeem_view);
             final ListView serviceList = (ListView) myDialog.findViewById(R.id.service_list);
             serviceList.setAdapter(new ServiceAdapter(getContext(), services, this));
             serviceList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> list, View v, int pos, long id) {
-                    int[] sDet = ((ServiceAdapter)serviceList.getAdapter()).getCurrentServiceDetails(pos);
+                    int[] sDet = ((ServiceAdapter) serviceList.getAdapter()).getCurrentServiceDetails(pos);
                     onRedeemPoints(sDet[0], sDet[1]);
                 }
             });
@@ -119,14 +149,13 @@ public class profile_fragment extends Fragment {
     }
 
     public void onRedeemPoints(int serviceid, int points) {
-        int result = ((MainActivity)getActivity()).onRedeemPoints(serviceid, points);
-        if (result>=0) {
+        int result = ((MainActivity) getActivity()).onRedeemPoints(serviceid, points);
+        if (result >= 0) {
             Toast.makeText(getContext(), "Transaction successful", Toast.LENGTH_SHORT).show();
             TextView textView = (TextView) getView().findViewById(R.id.balance);
             textView.setText(result + " points");
             activeperson.setPoints(result);
-        }
-        else {
+        } else {
             Toast.makeText(getContext(), "Error processing request, please try again later.", Toast.LENGTH_SHORT).show();
         }
     }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import dgounaris.dev.sch.DBHelper.MyDBHelper;
 import dgounaris.dev.sch.R;
 /**
  * Created by antonis on 06-Mar-17.
@@ -35,10 +36,13 @@ public class TrophyAdapter extends ArrayAdapter<Trophy> {
         else
             image.setVisibility(View.GONE);
 
+        MyDBHelper dbHelper = new MyDBHelper(getContext());
 
         TextView miwok = (TextView) listItemView.findViewById(R.id.title);
         miwok.setText(current_word.getTitle());
 
+        TextView desc = (TextView) listItemView.findViewById(R.id.trophy_desc);
+        desc.setText(current_word.getDescription());
         return listItemView;
     }
 

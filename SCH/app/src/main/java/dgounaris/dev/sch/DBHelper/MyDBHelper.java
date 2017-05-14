@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import dgounaris.dev.sch.People.Person;
 import dgounaris.dev.sch.People.Service;
@@ -136,7 +137,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
 
     public boolean setPersonTrophies(Person myperson) {
         ArrayList<Trophy> myTrophies = new ArrayList<>();
-        String myQuery = "select t." + MyDBContract.Trophies.COLUMN_NAME_NAME + ", t." + MyDBContract.Trophies.COLUMN_NAME_IMAGE +
+        String myQuery = "select t." + MyDBContract.Trophies.COLUMN_NAME_NAME + ", t." + MyDBContract.Trophies.COLUMN_NAME_DESCRIPTION + ", t." + MyDBContract.Trophies.COLUMN_NAME_IMAGE +
                 " from " + MyDBContract.People_Trophies.TABLE_NAME + " pt, " + MyDBContract.Trophies.TABLE_NAME + " t " +
                 "where pt." + MyDBContract.People_Trophies.COLUMN_NAME_PERSON_ID + " = " + myperson.getId() + " and pt." + MyDBContract.People_Trophies.COLUMN_NAME_TROPHY_ID + " = t." + MyDBContract.Trophies.COLUMN_NAME_ID;
         this.openDatabase();
@@ -146,6 +147,7 @@ public class MyDBHelper extends SQLiteOpenHelper {
                 byte[] myImgByte = cursor.getBlob(cursor.getColumnIndex(MyDBContract.Trophies.COLUMN_NAME_IMAGE)); //image
                 myperson.addTrophy(new Trophy(
                         cursor.getString(cursor.getColumnIndex(MyDBContract.Trophies.COLUMN_NAME_NAME)),
+                        cursor.getString(cursor.getColumnIndex(MyDBContract.Trophies.COLUMN_NAME_DESCRIPTION)),
                         BitmapFactory.decodeByteArray(myImgByte, 0, myImgByte.length)
                 ));
             } while (cursor.moveToNext());
